@@ -1,17 +1,56 @@
-# pr12_3
+# Проєкт E-commerce на Flutter: CI/CD та Оптимізація
 
-A new Flutter project.
+Цей проєкт демонструє налаштування повноцінного циклу автоматизації (CI/CD), написання тестів з аналізом покриття та впровадження технік оптимізації продуктивності у Flutter-додатку.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## CI/CD Pipeline (GitHub Actions)
 
-A few resources to get you started if this is your first Flutter project:
+У проєкті налаштовано автоматизований робочий процес у файлі .github/workflows/flutter_ci.yml, який складається з трьох основних етапів:
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+### 1. Quality
+* Автоматична перевірка форматування коду за допомогою dart format.
+* Статичний аналіз проєкту через flutter analyze для виявлення потенційних помилок.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 2. Test
+* Запуск усіх модульних та віджет-тестів.
+* Генерація звіту про покриття коду у форматі lcov.info.
+* Режим Fail-fast: тести запускаються лише у разі успішного проходження етапу Quality.
+
+### 3. Build
+* Автоматична збірка додатка в форматі APK при кожному push у гілку main.
+
+
+## Тестування та Покриття (Coverage)
+
+Проєкт забезпечений тестами для перевірки ключової бізнес-логіки:
+
+* Моделі даних: тести для Product та CartItem (перевірка валідності даних та розрахунків).
+* Сервіси: повне тестування CartService (логіка додавання, видалення товарів та розрахунок загальної суми).
+* Widget Tests: димовий тест інтерфейсу, що перевіряє коректність відображення лічильника кошика при взаємодії.
+
+Локальний звіт про покриття генерується в папку coverage/html для візуального аналізу.
+
+
+## Оптимізація продуктивності (Performance)
+
+У ході роботи було виявлено та виправлено кілька критичних проблем продуктивності:
+
+### 1. Винесення важких обчислень (Heavy Computations)
+* Проблема: важкі математичні розрахунки виконувалися безпосередньо в методі build(), що призводило до затримок (jank) інтерфейсу.
+* Рішення: логіку перенесено в окремий Isolate за допомогою функції compute(), що дозволяє виконувати розрахунки у фоновому потоці.
+
+### 2. Оптимізація перемальовування (Widget Rebuilds)
+* Проблема: використання широких слухачів (context.watch) змушувало весь екран оновлюватися при кожній зміні в кошику.
+* Рішення: впроваджено Selector та Consumer з пакету Provider для оновлення лише конкретних віджетів.
+* Для статичних частин інтерфейсу використано const конструктори.
+
+### 3. Рефакторинг структури віджетів
+* Складові частини екранів винесені в окремі StatelessWidget з const конструкторами для ефективного кешування піддерев віджетів.
+
+
+## Технологічний стек
+
+* Framework: Flutter (Dart)
+* State Management: Provider
+* CI/CD: GitHub Actions
+* Testing: flutter_test, integration_test
