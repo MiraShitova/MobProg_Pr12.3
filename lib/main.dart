@@ -80,7 +80,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];
-          return ProductTile(product: product); // FIX: Extracted to separate widget
+          return ProductTile(
+            product: product,
+          ); // FIX: Extracted to separate widget
         },
       ),
     );
