@@ -8,7 +8,7 @@ void main() {
 
   setUp(() {
     cartService = CartService();
-    product = Product(id: '1', name: 'Test Product', price: 10.0);
+    product = const Product(id: '1', name: 'Test Product', price: 10.0);
   });
 
   group('CartService Tests', () {
@@ -39,7 +39,7 @@ void main() {
 
     test('TotalPrice should calculate correctly', () {
       cartService.addItem(product);
-      cartService.addItem(Product(id: '2', name: 'Other', price: 20.0));
+      cartService.addItem(const Product(id: '2', name: 'Other', price: 20.0));
       expect(cartService.totalPrice, 30.0);
     });
 

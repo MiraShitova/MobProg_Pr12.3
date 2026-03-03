@@ -34,8 +34,6 @@ class ProductListScreen extends StatefulWidget {
 }
 
 class _ProductListScreenState extends State<ProductListScreen> {
-  int? _computationResult;
-
   @override
   void initState() {
     super.initState();
@@ -44,12 +42,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
   // FIX: Heavy computation moved out of build()
   Future<void> _performHeavyComputation() async {
-    final result = await compute(_heavyTask, 1000000);
-    if (mounted) {
-      setState(() {
-        _computationResult = result;
-      });
-    }
+    await compute(_heavyTask, 1000000);
   }
 
   static int _heavyTask(int count) {
