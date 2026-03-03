@@ -65,17 +65,15 @@ class _ProductListScreenState extends State<ProductListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Products'),
-        actions: [
-          const CartIconWithBadge(), // FIX: Extracted to a const widget to optimize rebuilds
+        actions: const [
+          CartIconWithBadge(), // FIX: Added const to the list literal
         ],
       ),
       body: ListView.builder(
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];
-          return ProductTile(
-            product: product,
-          ); // FIX: Extracted to separate widget
+          return ProductTile(product: product);
         },
       ),
     );
@@ -102,7 +100,6 @@ class CartIconWithBadge extends StatelessWidget {
           child: CircleAvatar(
             radius: 10,
             backgroundColor: Colors.red,
-            // FIX: Selector/Consumer to only rebuild the text, not the whole IconButton/Stack
             child: Selector<CartService, int>(
               selector: (context, cart) => cart.items.length,
               builder: (context, count, child) => Text(
@@ -128,7 +125,6 @@ class ProductTile extends StatelessWidget {
       subtitle: Text('\$${product.price}'),
       trailing: ElevatedButton(
         onPressed: () {
-          // FIX: Use read instead of watch for actions
           Provider.of<CartService>(context, listen: false).addItem(product);
         },
         child: const Text('Add to Cart'),
@@ -175,7 +171,6 @@ class CartTotalSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // FIX: Using Selector to only rebuild when totalPrice changes
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Selector<CartService, double>(
